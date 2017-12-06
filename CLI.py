@@ -1,7 +1,6 @@
 import FinanceAPI
 from StockSim import StockSim
 
-
 def print_options(portfolio,bpwr,acc_bal):
     print("Portfolio: " + portfolio)
     print("Buying Power: " + bpwr)
@@ -9,6 +8,7 @@ def print_options(portfolio,bpwr,acc_bal):
     print("B     Buy Stock")
     print("S     Sell Stock")
     print("P     Get Stock Price")
+    print("Q     Quit")
     print("Command: ",end='')
 
 
@@ -43,6 +43,10 @@ if __name__ == "__main__":
             print("Enter stock ticker: ", end="")
             ticker = input()
             print(FinanceAPI.getStockPrice(ticker))
+        elif cmd == "Q":
+            break
+        else:
+            print("Enter a correct command")
 
         print("[PRESS ENTER]")
         input()

@@ -1,4 +1,4 @@
-from MyLogger import MyLogger
+import MyLogger
 import FinanceAPI
 
 class StockSim(object):
@@ -7,7 +7,6 @@ class StockSim(object):
     def __init__(self, acc_bal=100000):
         self.bpwr = acc_bal
         self.portfolio = {}
-        self.log = MyLogger()
 
     def get_buying_pwr(self):
         return self.bpwr
@@ -45,6 +44,7 @@ class StockSim(object):
         if (price * shares <= self.bpwr):
             self.bpwr -= price * shares
         else:
+            MyLogger.ewrite("Not enough funds to purchase %d shares of %s at price %d" % (shares,ticker,price))
             raise ValueError("Not enough funds")
 
         if ticker in self.portfolio:
@@ -52,7 +52,7 @@ class StockSim(object):
         else:
             self.portfolio[ticker] = shares
 
-        self.log.write("BUY\t%s\t%d" % (ticker,shares))
+        MyLogger.write("BUY\t%s\t%d" % (ticker,shares))
 
     """
     @:param ticker of stock wanting to be sold must be without '$'
@@ -62,13 +62,15 @@ class StockSim(object):
         price = self.get_stock_price(ticker)
 
         if ticker not in self.portfolio:
+            MyLogger.ewrite("Do not have %s" % ticker)
             raise ValueError("Do not have %s" % ticker)
 
         if (shares <= self.portfolio[ticker]):
             self.bpwr += price * shares
             self.portfolio[ticker] -= shares
         else:
+            MyLogger.ewrite("Do not have %d shares of %s" % (shares,ticker))
             raise ValueError("Do not have %d shares" % shares)
 
-        self.log.write("SELL\t%s\t%d" % (ticker, shares))
+        MyLogger.write("SELL\t%s\t%d" % (ticker, shares))
 

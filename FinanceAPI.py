@@ -1,13 +1,19 @@
 import json
+from json import JSONDecodeError
+
 import requests
 
 def getData(ticker):
     rsp = requests.get('https://finance.google.com/finance?q=%s&output=json' % ticker)
 
     if rsp.status_code in (200,):
-        # https://stackoverflow.com/questions/46080632/http-error-404-from-googlefinance-in-python-2-7
-        fin_data = json.loads(rsp.content[6:-2].decode('unicode_escape'))
-        return fin_data
+        try:
+            # https://stackoverflow.com/questions/46080632/http-error-404-from-googlefinance-in-python-2-7
+            fin_data = json.loads(rsp.content[6:-2].decode('unicode_escape'))
+            return fin_data
+        except JSONDecodeError:
+            fin_data = json.loads(rsp.content.decode('unicode_escape'))
+            return fin_data
     else:
         return None
 
