@@ -1,0 +1,5 @@
+requests==2.18.4
+matplotlib==2.1.0
+pyrebase==3.0.27
+textblob==0.15.0
+tweepy==3.5.0
