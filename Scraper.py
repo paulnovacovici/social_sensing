@@ -30,7 +30,7 @@ class Scraper(object):
         self.tc.close_stream()
 
     def start_stock_twits_stream(self):
-        while (True):
+        while (StockInfo.flag):
             messages = stc.get_stock_streams(self.trending)['messages']
             for message in messages:
                 # Check what stock the message is talking about

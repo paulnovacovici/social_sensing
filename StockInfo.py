@@ -4,3 +4,4 @@ ticker {
 }
 """
 stock_info = {}
+flag = True

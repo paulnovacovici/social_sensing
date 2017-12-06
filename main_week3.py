@@ -3,7 +3,7 @@ import StockInfo
 import StockTwitsClient as stc
 import time as t
 
-from datetime import datetime
+from datetime import datetime,time
 from queue import PriorityQueue
 from Scraper import Scraper
 from StockSim import  StockSim
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     sim = StockSim()
     count = 0
-    while True:
+    while datetime.now().time() < time(15, 0):
         top_stock = ('', 0)
         for stock in trending:
             positive_sentiment = QueueSentiment(StockInfo.stock_info[stock])
@@ -108,3 +108,6 @@ if __name__ == "__main__":
 
         t.sleep(5)
         count += 5
+
+    scraper.close_twitter_stream()
+    StockInfo.flag = False
