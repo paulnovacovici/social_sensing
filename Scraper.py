@@ -27,6 +27,7 @@ class Scraper(object):
         self.tc.get_tweets_stream(self.trending)
 
     def close_twitter_stream(self):
+        pass
         self.tc.close_stream()
 
     def start_stock_twits_stream(self):

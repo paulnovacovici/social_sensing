@@ -2,6 +2,7 @@ import pyrebase
 import StockInfo
 import StockTwitsClient as stc
 import time as t
+import os
 
 from datetime import datetime,time
 from queue import PriorityQueue
@@ -41,6 +42,24 @@ def purchase_shares(top_stock):
     sim.buy_stock(top_stock[0], shares)
     current_stock = (top_stock[0], top_stock[1])
 
+
+def find_last_bal(od):
+    oldest_time = 0.0
+    bal = 0
+    for pair in list(od.items()):
+        hours,minutes = pair[0].split(':')
+        time = pair[0]
+        if len(minutes) == 1:
+            minutes = '0' + minutes
+            time = hours + ":" + minutes
+        num = float(time.replace(':','.'))
+
+        if num > oldest_time:
+            oldest_time = num
+            bal = pair[1]
+    return bal
+
+
 if __name__ == "__main__":
     config = {
         "apiKey" : "AIzaSyAKYTPbWbA0zvNNnO55CMBrInsL8NTXN1s",
@@ -65,7 +84,16 @@ if __name__ == "__main__":
 
     current_stock = ('', 0)
 
-    sim = StockSim()
+    balance = 100000
+
+    # Check if database is empty
+    if db.get().each() != None:
+        days = [user.key() for user in db.get().each()]
+        # Get the latest balance
+        balance = find_last_bal(db.child(days[-1]).get().val())
+        #balance = db.child(days[-1]).get().val().popitem(last=True)[1]
+
+    sim = StockSim(balance)
     count = 0
     while datetime.now().time() < time(15, 0):
         top_stock = ('', 0)
@@ -103,7 +131,7 @@ if __name__ == "__main__":
         if count % 60 == 0:
             now = datetime.now()
             # push to DB
-            db.child('%s %s, %s' % (MONTHS[now.month], now.day, now.year)).child('%s:%s' % (now.hour,now.minute)).set(acc_bal)
+            db.child('%s %d, %d' % (MONTHS[now.month], now.day, now.year)).child('%d:%d' % (now.hour,now.minute)).set(acc_bal)
             count = 0
 
         t.sleep(5)
