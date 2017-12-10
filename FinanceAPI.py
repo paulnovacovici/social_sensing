@@ -23,6 +23,10 @@ Get's last trade price for stock with ticker
 """
 def getStockPrice(ticker):
     fin_data = getData(ticker)
+    count = 0
+    while ((fin_data is None)and count < 3):
+        fin_data = getData(ticker)
+        count += 1
     return fin_data['l']
 
 """

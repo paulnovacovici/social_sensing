@@ -42,7 +42,10 @@ def purchase_shares(top_stock):
     sim.buy_stock(top_stock[0], shares)
     current_stock = (top_stock[0], top_stock[1])
 
-
+"""
+find the last balance from the prior day
+@:param od Ordered Dictionary of last day
+"""
 def find_last_bal(od):
     oldest_time = 0.0
     bal = 0
@@ -59,6 +62,10 @@ def find_last_bal(od):
             bal = pair[1]
     return bal
 
+def formatMinute(minutes):
+    if len(minutes) == 1:
+        minutes = '0' + minutes
+    return minutes
 
 if __name__ == "__main__":
     config = {
@@ -118,12 +125,18 @@ if __name__ == "__main__":
                     purchase_shares(top_stock)
                 except KeyError:
                     current_stock = ('',0)
+                except ZeroDivisionError: # API can't find price...
+                    trending.remove(top_stock[0])
+                    current_stock = ('', 0)
         else:
             # sometimes Finance API doesn't have price of stock available
             try:
                 purchase_shares(top_stock)
             except KeyError:
                 current_stock = ('', 0)
+            except ZeroDivisionError:
+                trending.remove(top_stock[0])
+                current_stock = ('',0)
 
         acc_bal = sim.get_acc_bal()
 
@@ -131,7 +144,7 @@ if __name__ == "__main__":
         if count % 60 == 0:
             now = datetime.now()
             # push to DB
-            db.child('%s %d, %d' % (MONTHS[now.month], now.day, now.year)).child('%d:%d' % (now.hour,now.minute)).set(acc_bal)
+            db.child('%s %d, %d' % (MONTHS[now.month], now.day, now.year)).child('%d:%s' % (now.hour,formatMinute(str(now.minute)))).set(acc_bal)
             count = 0
 
         t.sleep(5)
