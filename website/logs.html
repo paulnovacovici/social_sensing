@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<html>
+  <head>
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #myInput {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+  }
+
+  #myTable {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 18px;
+  }
+
+  #myTable th, #myTable td {
+    text-align: left;
+    padding: 12px;
+  }
+
+  #myTable tr {
+    border-bottom: 1px solid #ddd;
+  }
+
+  #myTable tr td {
+    color: #f1f1f1;
+    font-family: "Josefin Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  #myTable tr.header {
+    background-color: #f1f1f1;
+  }
+
+  #myTable tr:hover{
+    background-color: #f1f1f1;
+  }
+
+  #myTable tr:hover td{
+    color: black;
+  }
+
+  </style>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Social Sensing</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/business-casual.css" rel="stylesheet">
+  </head>
+  <body>
+  <div class="tagline-upper text-center text-heading text-shadow text-white mt-5 d-none d-lg-block">Social Sensing</div>
+    <div class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-5 d-none d-lg-block">Paul Novacovici</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-faded py-lg-4">
+      <div class="container">
+        <a class="navbar-brand text-uppercase text-expanded font-weight-bold d-lg-none" href="#">Start Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item active px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" href="index.html">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" href="logs.html">Logs</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="bg-faded my-4" >
+          <div id="curve_chart" ></div>
+      </div>
+
+    </div>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search..">
+
+  <table id="myTable">
+    <tr class="header">
+      <th style="width:33%;">Date</th>
+      <th style="width:33%;">Market</th>
+      <th style="width:33%">Ticker</th>
+  </table>
+    <script type="text/javascript">
+    function myFunction() {
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        td2 = tr[i].getElementsByTagName("td")[1];
+        td3 = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          if (td.innerHTML.toUpperCase().indexOf(filter) > -1 
+            || td2.innerHTML.toUpperCase().indexOf(filter) > -1 
+            || td3.innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+      }
+    }
+    var txtFile = new XMLHttpRequest();
+    txtFile.open("GET", "http://localhost:8000/purchase_log.txt", true);
+    txtFile.onreadystatechange = function()
+    {
+      if (txtFile.readyState === 4) {  // document is ready to parse.
+        if (txtFile.status === 200) {  // file is found
+          allText = txtFile.responseText; 
+          lines = txtFile.responseText.split("\n");
+          var table = document.getElementById("myTable");
+          for (var line in lines){
+            arr = lines[line].split("\t");
+            var tr = document.createElement("tr");
+            var td_date = document.createElement("td");
+            var td_market = document.createElement("td");
+            var td_ticker = document.createElement("td");
+            var date = document.createTextNode(arr[0]);
+            var market = document.createTextNode(arr[1]);
+            var ticker = document.createTextNode(arr[2]);
+
+            td_date.appendChild(date);
+            td_market.appendChild(market);
+            td_ticker.appendChild(ticker);
+            tr.appendChild(td_date);
+            tr.appendChild(td_market);
+            tr.appendChild(td_ticker);
+            table.appendChild(tr);
+          }
+        }
+      }
+    }
+    txtFile.send(null);
+    </script>
+  </body>
+</html>
