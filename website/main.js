@@ -11,7 +11,7 @@ firebase.initializeApp(config);
 var database = firebase.database();
 var dbRef = firebase.database().ref('/');
 
-google.charts.load('current', {'packages':['corechart','line','imagelinechart']});
+google.charts.load('44', {'packages':['corechart','line','imagelinechart']});
 google.charts.setOnLoadCallback(updateGraph);
 
 dates = {

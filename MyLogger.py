@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 DEBUG = False
-log = open(os.path.dirname(os.path.abspath(__file__)) + '/purchase_log.txt', 'a',1)
+log = open(os.path.dirname(os.path.abspath(__file__)) + 'website/purchase_log.txt', 'a',1)
 elog = open(os.path.dirname(os.path.abspath(__file__)) + '/elog.txt', 'a',1)
 dlog = open(os.path.dirname(os.path.abspath(__file__)) + '/dlog.txt', 'a',1)
 
